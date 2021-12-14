@@ -48,7 +48,7 @@ public class WebpFrameLoader {
     private boolean isRunning;
     private boolean isLoadPending;
     private boolean startFromFirstFrame;
-    private RequestBuilder<Bitmap> requestBuilder;
+    public RequestBuilder<Bitmap> requestBuilder;
     private DelayTarget current;
     private boolean isCleared;
     private DelayTarget next;
@@ -368,7 +368,7 @@ public class WebpFrameLoader {
         return new WebpFrameCacheKey(new ObjectKey(webpDecoder), frameIndex);
     }
 
-    private static class WebpFrameCacheKey implements Key {
+    static class WebpFrameCacheKey implements Key {
 
         private final Key sourceKey;
         private final int frameIndex;
@@ -404,4 +404,11 @@ public class WebpFrameLoader {
     interface OnEveryFrameListener {
         void onFrameReady();
     }
+
+    // FORK CHANGES
+    WebpSeekableFrameLoader createSeekableFrameLoader() {
+        return new WebpSeekableFrameLoader(bitmapPool, webpDecoder.copy(), requestBuilder, width, height);
+    }
+    // END OF FORK CHANGES
+
 }

@@ -379,4 +379,10 @@ public class WebpDrawable extends Drawable implements WebpFrameLoader.FrameCallb
             return 0;
         }
     }
+
+    // FORK CHANGES
+    public WebpSeekableDrawable newSeekableDrawable() {
+        return new WebpSeekableDrawable(state.frameLoader.createSeekableFrameLoader());
+    }
+    // END OF FORK CHANGES
 }

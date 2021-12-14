@@ -426,4 +426,26 @@ public class WebpDecoder implements GifDecoder {
                 frameInfo.height == mWebPImage.getHeight();
     }
 
+    // FORK CHANGES
+    public WebpDecoder copy() {
+        return new WebpDecoder(mBitmapProvider, mWebPImage, rawData, sampleSize, getCacheStrategy());
+    }
+
+    public int getDurationMs() {
+        return mWebPImage.getDuration();
+    }
+
+    public int getFrameIndexForTime(long frameStartTimeMs) {
+        int frameEndTimeMs = 0;
+        for (int i = 0; i < getFrameCount(); i++) {
+            frameEndTimeMs += mFrameDurations[i];
+            if (frameEndTimeMs > frameStartTimeMs) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+    // END OF FORK CHANGES
+
 }

@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 
@@ -211,6 +212,7 @@ public class WebpDrawable extends Drawable implements WebpFrameLoader.FrameCallb
         applyGravity = true;
     }
 
+    @Override
     public void draw(Canvas canvas) {
         if (isRecycled()) {
             return;
@@ -222,7 +224,13 @@ public class WebpDrawable extends Drawable implements WebpFrameLoader.FrameCallb
         }
 
         Bitmap currentFrame = state.frameLoader.getCurrentFrame();
-        canvas.drawBitmap(currentFrame, (Rect)null, getDestRect(), getPaint());
+        if (currentFrame == null) return;
+
+        if (transform == null) {
+            canvas.drawBitmap(currentFrame, null, getDestRect(), getPaint());
+        } else {
+            transform.onDraw(canvas, getPaint(), currentFrame);
+        }
     }
 
     public void setAlpha(int i) {
@@ -241,9 +249,9 @@ public class WebpDrawable extends Drawable implements WebpFrameLoader.FrameCallb
         return destRect;
     }
 
-    private Paint getPaint() {
+    public Paint getPaint() {
         if(paint == null) {
-            paint = new Paint(Paint.FILTER_BITMAP_FLAG);
+            paint = new Paint(Paint.FILTER_BITMAP_FLAG  | Paint.DITHER_FLAG);
         }
 
         return paint;
@@ -381,8 +389,51 @@ public class WebpDrawable extends Drawable implements WebpFrameLoader.FrameCallb
     }
 
     // FORK CHANGES
-    public WebpSeekableDrawable newSeekableDrawable() {
-        return new WebpSeekableDrawable(state.frameLoader.createSeekableFrameLoader());
+    private Transform transform;
+
+    public void seekToBlocking(long timeMs) {
+        final int newFrameIndex = getFrameIndexForTime(timeMs);
+        seekToBlocking(newFrameIndex);
+    }
+
+    /**
+     * Blocking load of frame at given index. Can't be called on main thread
+     */
+    public void seekToBlocking(int newFrameIndex) {
+        stop();
+        state.frameLoader.loadFrameBlocking(newFrameIndex);
+        invalidateSelf();
+    }
+
+    public void seekTo(int newFrameIndex) {
+        stop();
+        state.frameLoader.loadFrameAt(newFrameIndex);
+    }
+
+    public int getDurationMs() {
+        return state.frameLoader.getDurationMs();
+    }
+
+    public int getFrameIndexForTime(long frameStartTimeMs) {
+        final long loopedTimeMs = frameStartTimeMs % getDurationMs();
+        return state.frameLoader.getFrameIndexForTime(loopedTimeMs);
+    }
+
+    public void setTransform(@Nullable Transform transform) {
+        this.transform = transform;
+        if (transform != null) {
+            transform.onBoundsChange(destRect);
+        }
+    }
+
+    /**
+     * Interface to support clients performing custom transformations before the current WebP Bitmap is drawn.
+     */
+    public interface Transform {
+
+        void onBoundsChange(Rect bounds);
+
+        void onDraw(Canvas canvas, Paint paint, Bitmap buffer);
     }
     // END OF FORK CHANGES
 }

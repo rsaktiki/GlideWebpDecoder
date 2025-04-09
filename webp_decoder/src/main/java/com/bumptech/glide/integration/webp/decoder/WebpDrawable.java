@@ -100,8 +100,8 @@ public class WebpDrawable extends Drawable implements WebpFrameLoader.FrameCallb
 
     WebpDrawable(WebpState state) {
         this.isVisible = true;
-        this.maxLoopCount = -1;
         this.state = Preconditions.checkNotNull(state);
+        setLoopCount(LOOP_INTRINSIC);
     }
 
     @VisibleForTesting

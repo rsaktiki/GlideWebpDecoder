@@ -311,7 +311,15 @@ public class WebpFrameLoader {
 
     private void notifyCallbacks() {
         for (int i = callbacks.size() - 1; i >= 0; i--) {
-            callbacks.get(i).onFrameReady();
+            try {
+                // add try-catch to fix multi-thread race bug #100, #102
+                FrameCallback cb = callbacks.get(i);
+                if (cb == null)
+                    continue;
+                cb.onFrameReady();
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
         }
     }
 

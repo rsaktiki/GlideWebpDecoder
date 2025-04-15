@@ -315,8 +315,14 @@ public class WebpDecoder implements GifDecoder {
 
     @Override
     public void clear() {
-        mWebPImage.dispose();
-        mWebPImage = null;
+        // ** FORK CHANGES **
+        // mWebPImage.dispose();
+        // mWebPImage = null;
+        if (mWebPImage != null) {
+            mWebPImage.dispose();
+            mWebPImage = null;
+        }
+        // ** END OF FORK CHANGES **
         mFrameBitmapCache.evictAll();
         rawData = null;
     }

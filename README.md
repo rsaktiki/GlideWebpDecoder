@@ -1,7 +1,7 @@
 ## GlideWebpDecoder
 
 [![license](http://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=flat)](https://github.com/zjupure/GlideWebpDecoder/blob/master/LICENSE)
-[![Release Version](https://img.shields.io/badge/release-2.0-red.svg)](https://github.com/zjupure/GlideWebpDecoder/releases)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.zjupure/webpdecoder/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.zjupure/webpdecoder)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/zjupure/GlideWebpDecoder/pulls)
 
 GlideWebpDecoder is a [Glide](https://github.com/bumptech/glide) integration library for decoding and displaying webp images on Android platforms. It is based on [libwebp](https://github.com/webmproject/libwebp) project and takes some implementation from [Fresco](https://github.com/facebook/fresco) and [GlideWebpSupport](https://github.com/roths/GlideWebpSupport) as references.
@@ -13,9 +13,9 @@ GlideWebpDecoder is a [Glide](https://github.com/bumptech/glide) integration lib
 
 ## Dependency Integration
 
-Library is available in jcenter. If you build with Gradle, just add the following dependencies to your `build.gradle` file.
+Library is available in MavenCentral. If you build with Gradle, just add the following dependencies to your `build.gradle` file.
 Different Glide version is corresponding to different GlideWebpDecoder due to the annotation processor compatibility. The version rule of GlideWebpDecoder is "{major_version}.{glide_version}".
-For example, if you use glide 4.12.0, the corresponding version of GlideWebpDecoder should be 2.0.4.12.0
+For example, if you use glide 4.16.0, the corresponding version of GlideWebpDecoder should be 2.6.4.16.0
 
 Library will only follow the latest three version of Glide. If you use a lower version glide, please clone the project and modify it yourself.
 
@@ -33,14 +33,14 @@ Since [JCenter is being taken down on May 1 2021](https://jfrog.com/blog/into-th
 Changes:
 * library group id has changed from `com.zlc.glide` to `com.github.zjupure`
 * add `mavenCentral()` in your `build.gradle` to fetch this library
-* only 2.0 version with glide 4.10~4.12 has been migrated and older version not support anymore
+* only 2.0 version with glide 4.10~4.16 has been migrated and older version not support anymore
 
 If your project use old library version below 2.0, you should upgrade the library to the latest 2.0 version.
 
 ```gradle
-def GLIDE_VERSION = "4.12.0"
+def GLIDE_VERSION = "4.16.0"
 // webpdecoder
-implementation "com.github.zjupure:webpdecoder:2.0.${GLIDE_VERSION}"
+implementation "com.github.zjupure:webpdecoder:2.6.${GLIDE_VERSION}"
 // glide 4.10.0+
 implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
 annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"

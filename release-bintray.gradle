@@ -29,7 +29,7 @@ ext {
 apply from: rootProject.file('scripts/android-tasks.gradle')
 
 // Upload to Bintray
-apply from: rootProject.file('scripts/bintray.gradle')
+//apply from: rootProject.file('scripts/bintray.gradle')
 
 // Upload to Maven
 apply from: rootProject.file('scripts/upload.gradle')
@@ -39,10 +39,8 @@ apply from: rootProject.file('scripts/publish.gradle')
 
 
 afterEvaluate {
-    Task bintrayUpload = project.tasks.getByName("bintrayUpload")
     Task mavenUpload = project.tasks.getByName("uploadArchives")
     Task build = project.tasks.getByName("build")
-    Task install = project.tasks.getByName("install")
     Task assemble = project.tasks.getByName("assemble")
     project.tasks.findAll {
         it.name.startsWith("publish")
@@ -51,9 +49,6 @@ afterEvaluate {
         it.dependsOn(assemble)
     }
 
-    bintrayUpload.dependsOn(install)
-    bintrayUpload.dependsOn(build)
-
-    mavenUpload.dependsOn(install)
     mavenUpload.dependsOn(build)
+    mavenUpload.dependsOn(assemble)
 }
